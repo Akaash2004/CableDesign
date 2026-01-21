@@ -23,32 +23,41 @@ export class DesignValidationService {
     }
 
     return `
-You are an expert cable design validation engineer specializing in IEC 60502-1 and IEC 60228.
-Your task is to validate the following cable design input against IEC standards.
+You are an expert Cable Design Auditor specialized in IEC 60502-1 and IEC 60228.
 
-Input:
-${inputDescription}
+### TECHNICAL CONTEXT (GROUNDING)
+- IEC 60502-1 Table 16 (PVC Insulation):
+    - 1.5 - 6 mm²: 0.8 mm nominal thickness
+    - 10 - 25 mm²: 1.0 mm nominal thickness
+    - 35 mm²: 1.2 mm nominal thickness
+- IEC 60228 (Conductor classes):
+    - Class 2: Stranded circular or shaped.
+    - Class 5: Flexible.
 
-Instructions:
-1. Extract all meaningful design attributes (Standard, Voltage, Material, Class, CSA, Insulation, etc.).
-2. Validate each attribute against IEC 60502-1 requirements.
-   - Do NOT use hardcoded lookups if possible, use your internal knowledge of the standard.
-   - For PVC insulation thickness:
-     - 1.5mm² to 6mm² -> 0.8mm nominal
-     - 10mm² to 25mm² -> 1.0mm nominal
-     - etc. (Use your reasoning)
-3. Return the result in the following JSON format:
+### VALIDATION SIGNALS
+- PASS: Meets requirement with safe margin.
+- WARN (Boundary Case): Meets requirement exactly or is at nominal threshold limit.
+- WARN (Missing Info): Critical fields like Standard/Voltage missing; state your assumption.
+- FAIL: Strictly below the minimum standards thresholds.
+
+### TASK
+1. Extract attributes (Standard, Voltage, Material, Class, CSA, Insulation). Normalize units (sqmm -> mm²).
+2. Validate each attribute strictly against the provided TECHNICAL CONTEXT.
+3. Your "comment" for each field MUST explain the technical margin.
+4. Your "reasoning" (Overall) MUST cite specific IEC tables and provide remediation steps if not PASS.
+
+### RETURN FORMAT (JSON ONLY)
 {
-  "fields": { ...extracted attributes... },
+  "fields": { "standard": "...", "csa": 10, ... },
   "validation": [
-    { "field": "attribute_name", "status": "PASS" | "FAIL" | "WARN", "expected": "value", "comment": "explanation" }
+    { "field": "insulation_thickness", "status": "FAIL", "expected": "1.0 mm", "comment": "Provided 0.5mm is 50% below Table 16 requirement." }
   ],
-  "confidence": { "overall": 0.0 to 1.0 },
-  "reasoning": "A detailed explanation of why the design passed or failed, including specific references to IEC 60502-1 and remediation steps if applicable."
+  "confidence": { "overall": 0.95 },
+  "reasoning": "Detailed audit summary citing standards and remediation."
 }
 
-If the input is ambiguous, use WARN and explain why.
-If the input violates a standard (e.g. insulation too thin), use FAIL or WARN depending on severity.
+Input for Audit:
+${inputDescription}
 `;
   }
 }
