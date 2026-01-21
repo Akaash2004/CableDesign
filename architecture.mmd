@@ -12,26 +12,23 @@ graph TD
         Controller[DesignValidationController]
         Service[DesignValidationService]
         AIService[AiIntegrationService]
-        MockEngine[Dynamic Mock Heuristics]
+        PromptEngine[Reasoning System Prompt]
     end
 
-    subgraph External [AI Provider]
-        LLM[Ollama / OpenAI]
+    subgraph External [Inference Engine]
+        LLM[Ollama : Gemma 3 1B]
     end
 
     User -->|Inputs Design| UI
     UI -->|POST /validate| Controller
     Controller -->|DTO| Service
-    Service -->|Build Prompt| AIService
+    Service -->|Inject Standards| PromptEngine
+    PromptEngine -->|System + User Message| AIService
     
-    AIService -->|Check Config/Status| Connection{Connected?}
-    
-    Connection -- Yes --> LLM
-    LLM -->|JSON Response| AIService
-    
-    Connection -- No/Fail --> MockEngine
-    MockEngine -->|Heuristic Response| AIService
+    AIService -->|Connection| LLM
+    LLM -->|Structured JSON| AIService
     
     AIService -->|ValidationResult| Service
     Service -->|Response| UI
     UI -->|Display Results| User
+    UI -->|Drill-down| Panel
