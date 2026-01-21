@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Container, Typography, Box, Button, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { Container, Typography, Box, Button, CssBaseline, ThemeProvider, createTheme, Paper } from '@mui/material';
 import DesignInputForm from '@/components/DesignInputForm';
 import ValidationResultsTable from '@/components/ValidationResultsTable';
 import AiReasoningPanel from '@/components/AiReasoningPanel';
