@@ -1,54 +1,77 @@
 # AI-Driven Cable Design Validation System
 
-An intelligent system for validating cable design specifications against IEC standards (e.g., IEC 60502-1) using AI reasoning and dynamic heuristics.
+This system provides an automated technical audit for low-voltage (LV) cable designs, validating specifications against IEC 60502-1 and IEC 60228 standards. It utilizes Large Language Models (LLM) as the primary reasoning engine to interpret engineering requirements and provide structured validation feedback.
 
-## Features
+## Core Philosophy: AI-as-Auditor
 
--   **AI-Powered Validation**: Uses LLMs (OpenAI-compatible / Ollama) to reason about cable designs.
--   **Dynamic Mock Engine**: Smart fallback mechanism that enforces critical rules (e.g., Min Insulation Thickness) even without an active AI connection.
--   **Structured & Free-Text Input**: Accepts both form-based data and raw engineering text (e.g., "10mm sq cable with 0.5mm ins").
--   **Detailed Reasoning**: Provides actionable feedback and remediation steps for failed validations.
--   **Modern UI**: Dark-themed, responsive interface built with Next.js and Material UI.
+The system is designed to evaluate AI capability in engineering standards validation. Unlike deterministic rule engines, this application treats the LLM as a Senior Cable Engineering Auditor. All validation logic, including nominal thickness thresholds and material compatibility, is encapsulated within the AI system prompt rather than hardcoded in the application logic.
+
+### System Prompt Logic
+
+The reasoning engine is governed by a comprehensive system prompt that defines:
+
+1.  **Engineering Knowledge Base**: Hard-coded engineering rules derived from IEC 60502-1 (Table 16 for PVC insulation) and IEC 60228 (Conductor classes).
+2.  **Validation Protocol**: Strict definitions for PASS, WARN, and FAIL signals based on safety margins and data completeness.
+3.  **Audit Workflow**: A multi-step process for extraction, field-by-field auditing, and reasoning generation.
+4.  **Structured Output**: Ensures the AI response follows a strict JSON schema for seamless integration with the user interface.
 
 ## Technology Stack
 
--   **Frontend**: Next.js 14, TypeScript, Material UI (MUI), DataGrid.
--   **Backend**: NestJS, TypeScript, Axios.
--   **AI Integration**: OpenAI API compatible interface (Supports GPT-4, Ollama Llama3, etc.).
+### Backend
+- **Framework**: NestJS (TypeScript)
+- **AI Gateway**: Custom integration service communicating with OpenAI-compatible endpoints.
+- **Local LLM**: Optimized for Gemma 2 (via Ollama) to ensure data privacy and specialized engineering reasoning.
 
-## Prerequisites
+### Frontend
+- **Framework**: Next.js 14 (App Router)
+- **Styling**: Material UI (MUI) with a professional dark-themed design system.
+- **Components**: High-performance DataGrid for technical attribute display and slide-out drawers for detailed AI justifications.
 
--   Node.js (v18+)
--   Ollama (optional, for local AI reasoning)
+## Installation and Setup
 
-## Installation & Running
+### Prerequisites
+- Node.js (v18 or higher)
+- Ollama (for local inference)
 
-### 1. Backend
+### 1. Initialize Local Model
+Ensure the Gemma model is available locally:
+```bash
+ollama pull gemma2:2b
+```
 
+### 2. Backend Configuration
+Navigate to the backend directory, install dependencies, and configure the environment:
 ```bash
 cd backend
 npm install
-# Update .env if using a custom AI model (default: Ollama/Llama3)
+```
+Configure your `.env` file with the following parameters:
+```env
+AI_API_URL=http://localhost:11434/v1/chat/completions
+AI_API_KEY=ollama
+AI_MODEL=gemma2:2b
+```
+Start the development server:
+```bash
 npm run start:dev
 ```
-*Runs on Port 3000.*
 
-### 2. Frontend
-
+### 3. Frontend Configuration
+Navigate to the frontend directory and start the development server:
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-*Runs on Port 3001.*
+The application will be accessible at `http://localhost:3001`.
 
-## Usage
+## Usage Manual
 
-1.  Open [http://localhost:3001](http://localhost:3001).
-2.  Enter cable details (e.g., `IEC 60502-1`, `10 mm²`, `PVC`, `0.6/1 kV`).
-3.  Click **VALIDATE**.
-4.  View PASS/FAIL status. Click **"View AI Reasoning"** for detailed explanations.
+1.  **Input Data**: Provide cable specifications using either the structured form or the free-text engineering description field.
+2.  **Validation**: Execute the validate command to initiate the AI audit.
+3.  **Review Results**: Analyze the attribute-level status indicators (PASS, WARN, FAIL).
+4.  **Technical Reasoning**: Access the AI Reasoning Panel for detailed justifications, table citations, and recommended remediation steps.
 
-## License
-
-Private / Internal Use.
+## Technical Standards Focus
+- **IEC 60502-1**: Power cables with extruded insulation and their accessories for rated voltages from 1 kV up to 30 kV.
+- **IEC 60228**: Conductors of insulated cables.
