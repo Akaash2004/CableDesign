@@ -24,6 +24,7 @@ export default function DesignValidatorPage() {
     const [extractedFields, setExtractedFields] = useState<any>({});
     const [isLoading, setIsLoading] = useState(false);
     const [confidence, setConfidence] = useState(0);
+    const [reasoning, setReasoning] = useState('');
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     // Default to localhost:3000 -> localhost:3000/api proxy? No, backend is on 3000, frontend on 3001?
@@ -53,6 +54,7 @@ export default function DesignValidatorPage() {
             setExtractedFields(result.fields || {});
             setResults(result.validation || []);
             setConfidence(result.confidence?.overall || 0);
+            setReasoning(result.reasoning || 'No specific reasoning provided by AI.');
             setDrawerOpen(true);
         } catch (error) {
             console.error('Error validating design:', error);
@@ -90,6 +92,7 @@ export default function DesignValidatorPage() {
                     open={drawerOpen}
                     onClose={() => setDrawerOpen(false)}
                     confidence={confidence}
+                    reasoning={reasoning}
                 />
             </Container>
         </ThemeProvider>

@@ -7,9 +7,10 @@ interface AiReasoningPanelProps {
     open: boolean;
     onClose: () => void;
     confidence: number;
+    reasoning: string;
 }
 
-export default function AiReasoningPanel({ open, onClose, confidence }: AiReasoningPanelProps) {
+export default function AiReasoningPanel({ open, onClose, confidence, reasoning }: AiReasoningPanelProps) {
     return (
         <Drawer
             anchor="right"
@@ -36,9 +37,8 @@ export default function AiReasoningPanel({ open, onClose, confidence }: AiReason
                     </Box>
                 </Box>
 
-                <Typography variant="body1">
-                    The AI has analyzed the input against IEC 60502-1 and IEC 60228 standards.
-                    The validation logic infers expectations based on standard cable construction rules (e.g., insulation thickness relative to conductor cross-sectional area).
+                <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
+                    {reasoning}
                 </Typography>
 
                 <Box sx={{ mt: 2, p: 2, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>

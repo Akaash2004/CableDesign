@@ -8,6 +8,7 @@ export class DesignValidationService {
 
   async validate(dto: ValidationRequestDto): Promise<ValidationResponse> {
     const prompt = this.buildPrompt(dto);
+    console.log('Generated Prompt:', prompt);
     return this.aiService.validateDesign(prompt);
   }
 
@@ -42,7 +43,8 @@ Instructions:
   "validation": [
     { "field": "attribute_name", "status": "PASS" | "FAIL" | "WARN", "expected": "value", "comment": "explanation" }
   ],
-  "confidence": { "overall": 0.0 to 1.0 }
+  "confidence": { "overall": 0.0 to 1.0 },
+  "reasoning": "A detailed explanation of why the design passed or failed, including specific references to IEC 60502-1 and remediation steps if applicable."
 }
 
 If the input is ambiguous, use WARN and explain why.
