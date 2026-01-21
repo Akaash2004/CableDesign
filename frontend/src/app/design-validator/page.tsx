@@ -79,7 +79,15 @@ export default function DesignValidatorPage() {
 
                 {results.length > 0 && (
                     <Box sx={{ mt: 4 }}>
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                            <Paper sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 2, bgcolor: 'background.paper', border: '1px solid', borderColor: confidence > 0.8 ? 'success.main' : confidence > 0.5 ? 'warning.main' : 'error.main' }}>
+                                <Typography variant="subtitle1" fontWeight="bold">
+                                    Overall System Confidence:
+                                </Typography>
+                                <Typography variant="h6" color={confidence > 0.8 ? 'success.main' : confidence > 0.5 ? 'warning.main' : 'error.main'} fontWeight="bold">
+                                    {Math.round(confidence * 100)}%
+                                </Typography>
+                            </Paper>
                             <Button variant="outlined" onClick={() => setDrawerOpen(true)}>
                                 View AI Reasoning
                             </Button>

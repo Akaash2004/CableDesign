@@ -24,15 +24,22 @@ export default function AiReasoningPanel({ open, onClose, confidence, reasoning 
                 <Divider sx={{ mb: 2 }} />
 
                 <Box sx={{ mb: 4 }}>
-                    <Typography variant="subtitle1" gutterBottom>
+                    <Typography variant="subtitle1" gutterBottom fontWeight="bold">
                         Confidence Score
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Box sx={{ width: '100%', mr: 1 }}>
-                            <LinearProgress variant="determinate" value={confidence * 100} />
+                            <LinearProgress
+                                variant="determinate"
+                                value={confidence * 100}
+                                color={confidence > 0.8 ? 'success' : confidence > 0.5 ? 'warning' : 'error'}
+                                sx={{ height: 10, borderRadius: 5 }}
+                            />
                         </Box>
-                        <Box sx={{ minWidth: 35 }}>
-                            <Typography variant="body2" color="text.secondary">{`${Math.round(confidence * 100)}%`}</Typography>
+                        <Box sx={{ minWidth: 45 }}>
+                            <Typography variant="h6" color={confidence > 0.8 ? 'success.main' : confidence > 0.5 ? 'warning.main' : 'error.main'} fontWeight="bold">
+                                {`${Math.round(confidence * 100)}%`}
+                            </Typography>
                         </Box>
                     </Box>
                 </Box>
