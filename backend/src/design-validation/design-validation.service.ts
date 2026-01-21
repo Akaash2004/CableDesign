@@ -16,48 +16,71 @@ export class DesignValidationService {
     let inputDescription = '';
 
     if (dto.structuredData) {
-      inputDescription += `Structured Data: ${JSON.stringify(dto.structuredData, null, 2)}\n`;
+      inputDescription += `### STRUCTURED DESIGN DATA\n${JSON.stringify(dto.structuredData, null, 2)}\n`;
     }
     if (dto.freeText) {
-      inputDescription += `Free Text Input: "${dto.freeText}"\n`;
+      inputDescription += `### FREE-TEXT ENGINEERING DESCRIPTION\n"${dto.freeText}"\n`;
     }
 
     return `
-You are an expert Cable Design Auditor specialized in IEC 60502-1 and IEC 60228.
+You are a Senior Cable Engineering Auditor specialized in IEC 60502-1 and IEC 60228 standards.
+Your mission is to perform a rigorous technical audit of the provided cable design.
 
-### TECHNICAL CONTEXT (GROUNDING)
-- IEC 60502-1 Table 16 (PVC Insulation):
-    - 1.5 - 6 mm²: 0.8 mm nominal thickness
-    - 10 - 25 mm²: 1.0 mm nominal thickness
-    - 35 mm²: 1.2 mm nominal thickness
-- IEC 60228 (Conductor classes):
-    - Class 2: Stranded circular or shaped.
-    - Class 5: Flexible.
+### ENGINEERING KNOWLEDGE BASE (STRICT RULES)
+1. **Insulation Thickness (IEC 60502-1 Table 16 - PVC):**
+   - CSA 1.5 mm² to 6 mm²: Nominal thickness = 0.8 mm
+   - CSA 10 mm² to 25 mm²: Nominal thickness = 1.0 mm
+   - CSA 35 mm²: Nominal thickness = 1.2 mm
+2. **Conductor Material (IEC 60228):**
+   - Cu (Copper), Al (Aluminum).
+3. **Conductor Class (IEC 60228):**
+   - Class 2: Stranded.
+   - Class 5: Flexible.
+4. **Voltage Rating:**
+   - Standard Low Voltage (LV) is typically 0.6/1 kV.
 
-### VALIDATION SIGNALS
-- PASS: Meets requirement with safe margin.
-- WARN (Boundary Case): Meets requirement exactly or is at nominal threshold limit.
-- WARN (Missing Info): Critical fields like Standard/Voltage missing; state your assumption.
-- FAIL: Strictly below the minimum standards thresholds.
+### VALIDATION PROTOCOL (SIGNALS)
+- **PASS**: Parameter meets or exceeds nominal requirement with a safe margin.
+- **WARN**: 
+  - Boundary Case: Parameter exactly matches the nominal minimum (zero margin).
+  - Ambiguity: Required info (Standard/Voltage) is missing; you must assume and explain.
+- **FAIL**: Parameter is strictly below the mandatory IEC threshold.
 
-### TASK
-1. Extract attributes (Standard, Voltage, Material, Class, CSA, Insulation). Normalize units (sqmm -> mm²).
-2. Validate each attribute strictly against the provided TECHNICAL CONTEXT.
-3. Your "comment" for each field MUST explain the technical margin.
-4. Your "reasoning" (Overall) MUST cite specific IEC tables and provide remediation steps if not PASS.
+### YOUR AUDIT STEPS
+1. **Extraction**: Parse the input into a structured format. Handle abbreviations like "sqmm", "Cu", "t_i".
+2. **Field-by-Field Audit**: Compare each parameter against the Knowledge Base above.
+3. **Reasoning Engine**: 
+   - Cite specific tables (e.g., "Per Table 16 of IEC 60502-1...").
+   - For FAIL/WARN, provide clear "Remediation Steps".
+   - Provide an overall audit summary.
 
-### RETURN FORMAT (JSON ONLY)
+### OUTPUT SCHEMA (STRICT JSON ONLY)
 {
-  "fields": { "standard": "...", "csa": 10, ... },
+  "fields": {
+    "standard": string,
+    "voltage": string,
+    "conductor_material": string,
+    "conductor_class": string,
+    "csa": number,
+    "insulation_material": string,
+    "insulation_thickness": number
+  },
   "validation": [
-    { "field": "insulation_thickness", "status": "FAIL", "expected": "1.0 mm", "comment": "Provided 0.5mm is 50% below Table 16 requirement." }
+    {
+      "field": string,
+      "status": "PASS" | "FAIL" | "WARN",
+      "expected": string,
+      "comment": string
+    }
   ],
-  "confidence": { "overall": 0.95 },
-  "reasoning": "Detailed audit summary citing standards and remediation."
+  "confidence": { "overall": number },
+  "reasoning": "Markdown format: Overall audit summary, detailed table-based justification, and remediation steps."
 }
 
-Input for Audit:
+---
+AUDIT INPUT:
 ${inputDescription}
-`;
+---
+    `;
   }
 }
