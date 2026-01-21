@@ -41,7 +41,7 @@ export default function AiReasoningPanel({ open, onClose, confidence }: AiReason
                     The validation logic infers expectations based on standard cable construction rules (e.g., insulation thickness relative to conductor cross-sectional area).
                 </Typography>
 
-                <Box sx={{ mt: 2, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
+                <Box sx={{ mt: 2, p: 2, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
                     <Typography variant="caption" display="block">
                         Note: This validation is probabilistic. Always verify critical engineering decisions with official standards documents.
                     </Typography>
