@@ -71,7 +71,7 @@ export class AiIntegrationService {
             fields: {},
             validation: [],
             confidence: { overall: 0 },
-            reasoning: "AI service connection failed. Please ensure Ollama is running with the 'gemma2:2b' model pulled."
+            reasoning: "AI service connection failed. Please ensure Ollama is running with the 'gemma3:1b' model pulled."
         };
     }
 }

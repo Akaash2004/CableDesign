@@ -20,7 +20,7 @@ The reasoning engine is governed by a comprehensive system prompt that defines:
 ### Backend
 - **Framework**: NestJS (TypeScript)
 - **AI Gateway**: Custom integration service communicating with OpenAI-compatible endpoints.
-- **Local LLM**: Optimized for Gemma 2 (via Ollama) to ensure data privacy and specialized engineering reasoning.
+- **Local LLM**: Optimized for Gemma 3 (via Ollama) to ensure data privacy and specialized engineering reasoning.
 
 ### Frontend
 - **Framework**: Next.js 14 (App Router)
@@ -36,7 +36,7 @@ The reasoning engine is governed by a comprehensive system prompt that defines:
 ### 1. Initialize Local Model
 Ensure the Gemma model is available locally:
 ```bash
-ollama pull gemma2:2b
+ollama pull gemma3:1b
 ```
 
 ### 2. Backend Configuration
@@ -49,7 +49,7 @@ Configure your `.env` file with the following parameters:
 ```env
 AI_API_URL=http://localhost:11434/v1/chat/completions
 AI_API_KEY=ollama
-AI_MODEL=gemma2:2b
+AI_MODEL=gemma3:1b
 ```
 Start the development server:
 ```bash
